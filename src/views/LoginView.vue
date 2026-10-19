@@ -1,0 +1,120 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+// 表單綁定變數
+const adminUser = ref('')
+const adminPass = ref('')
+const loading = ref(false)
+const errorMessage = ref('')
+
+// 處理登入表單送出
+const handleLogin = async () => {
+  if (!adminUser.value || !adminPass.value) {
+    errorMessage.value = '請填寫帳號與密碼'
+    return
+  }
+
+  loading.value = true
+  errorMessage.value = ''
+
+  try {
+    // 提示：開發階段若有跨域，可經由 Vite Proxy 轉發至 /api/auth/login
+    const response = await fetch('https://etuser2.hopto.org/newklms/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({
+        admin_user: adminUser.value,
+        admin_pass: adminPass.value
+      })
+    })
+
+    const result = await response.json()
+
+    if (response.ok && (result.status === 'success' || result.success)) {
+      // 登入成功處理（例如：儲存 Token/User 資訊）
+      if (result.token) {
+        localStorage.setItem('admin_token', result.token)
+      }
+      // 跳轉至首頁或管理後台頁面
+      router.push('/')
+    } else {
+      errorMessage.value = result.message || '帳號或密碼錯誤，請重新輸入'
+    }
+  } catch (err) {
+    console.error('Login Error:', err)
+    errorMessage.value = '連線伺服器失敗，請稍後再試'
+  } finally {
+    loading.value = false
+  }
+}
+</script>
+
+<template>
+  <section id="page-login" class="page-view active">
+    <div id="admin-login-box" class="row justify-content-center my-4">
+      <div class="col-md-5">
+        <div class="custom-card p-4">
+          <!-- 圖示與標題 -->
+          <div class="text-center mb-4">
+            <div class="bg-primary text-white p-3 rounded-circle d-inline-flex mb-2">
+              <span class="material-symbols-outlined fs-2">admin_panel_settings</span>
+            </div>
+            <h4 class="fw-bold">甄試管理後台登入</h4>
+            <p class="text-muted fs-7">學校審核人員與管理者專用入口</p>
+          </div>
+
+          <!-- 錯誤提示區塊 -->
+          <div v-if="errorMessage" class="alert alert-danger py-2 fs-7" role="alert">
+            {{ errorMessage }}
+          </div>
+
+          <!-- 登入表單 -->
+          <form @submit.prevent="handleLogin">
+            <div class="mb-3">
+              <label class="form-label fs-7 fw-semibold" for="admin-user">帳號</label>
+              <input 
+                type="text" 
+                id="admin-user" 
+                v-model.trim="adminUser"
+                class="form-control" 
+                autocomplete="off" 
+                placeholder="管理帳號" 
+                minlength="4" 
+                required
+              >
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fs-7 fw-semibold" for="admin-pass">密碼</label>
+              <input 
+                type="password" 
+                id="admin-pass" 
+                v-model.trim="adminPass"
+                class="form-control" 
+                minlength="4" 
+                autocomplete="off" 
+                placeholder="管理密碼" 
+                required
+              >
+            </div>
+
+            <button 
+              type="submit" 
+              class="btn btn-primary w-100 fw-bold py-2 mb-2 d-flex align-items-center justify-content-center gap-2"
+              :disabled="loading"
+            >
+              <span v-if="loading" class="spinner-border spinner-border-sm" role="status"></span>
+              <span>{{ loading ? '驗證中...' : '登入管理後台' }}</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
