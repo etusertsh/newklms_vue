@@ -26,6 +26,43 @@ const sysParams = ref({
   slogan: '提供公平、公開、便利的數位化報名流程。請備齊個人資格資料與學籍資料後進行線上申辦。'
 })
 
+const authState = ref({
+  isLoggedIn: false,
+  user: null
+})
+
+const setAuth = (userData) => {
+  if(userData) {
+    authState.value = {
+      isLoggedIn: true,
+      user: userData
+    }
+  }else{
+    authState.value = {
+      isLoggedIn: false,
+      user: null
+    }
+  }
+}
+
+const checkAuth = async() => {
+  try {
+    const res = await fetch('/newklms/api/auth/me', {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    if (res.ok) {
+      const data = await res.json()
+      if (data.isLoggedIn) {
+        setAuth(data.user)
+      }
+    }
+  } catch (err) {
+    console.error('Check Auth Failed:', err)
+  }
+}
+provide('auth', authState)
+provide('setAuth', setAuth)
+
 const loadingParams = ref(true)
 
 // 安全解析 JSON 字串 Helper
@@ -112,6 +149,7 @@ const fetchDateVars = async () => {
 provide('dateVars', dateVars)
 
 onMounted(() => {
+  checkAuth()
   fetchSystemParams()
   fetchDateVars()
 })

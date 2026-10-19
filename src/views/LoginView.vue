@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, inject } from 'vue'
+//import { useRouter } from 'vue-router'
 
-const router = useRouter()
+//const router = useRouter()
 
 // 表單綁定變數
 const adminUser = ref('')
@@ -10,11 +10,31 @@ const adminPass = ref('')
 const loading = ref(false)
 const errorMessage = ref('')
 
+// 注入 App.vue 提供的 setAuth 方法
+const setAuth = inject('setAuth')
+
 // 處理登入表單送出
-const handleLogin = async () => {
-  if (!adminUser.value || !adminPass.value) {
-    errorMessage.value = '請填寫帳號與密碼'
+const handleLogin = async (e) => {
+  if(e?.target && !e.target.checkValidity()){
+    e.target.reportValidity()
     return
+  }
+  const username = adminUser.value.trim()
+  const password = adminPass.value.trim()
+
+  if(!username || !password){
+    errorMessage.value = '請填寫帳號與密碼！'
+    return 
+  }
+
+  if(username.length < 4){
+    errorMessage.value = '帳號長度至少需要 4 個字元！'
+    return
+  }
+  
+  if(password.length < 4){
+    errorMessage.value = '密碼長度至少需要 4 個字元！'
+    return 
   }
 
   loading.value = true
@@ -22,27 +42,27 @@ const handleLogin = async () => {
 
   try {
     // 提示：開發階段若有跨域，可經由 Vite Proxy 轉發至 /api/auth/login
-    const response = await fetch('https://etuser2.hopto.org/newklms/api/auth/login', {
+    const response = await fetch('/newklms/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest'
       },
       body: JSON.stringify({
-        admin_user: adminUser.value,
-        admin_pass: adminPass.value
+        admin_user: username,
+        admin_pass: password
       })
     })
 
     const result = await response.json()
 
-    if (response.ok && (result.status === 'success' || result.success)) {
-      // 登入成功處理（例如：儲存 Token/User 資訊）
-      if (result.token) {
-        localStorage.setItem('admin_token', result.token)
+    if (response.ok && result.success) {
+      // 1. 更新前端 Auth 狀態
+      if (setAuth) {
+        setAuth(result.data)
       }
-      // 跳轉至首頁或管理後台頁面
-      router.push('/')
+      // 2. 登入成功：跳轉至 CI4 後端管理主頁 (/newklms/admin)
+      window.location.href = '/newklms/admin'
     } else {
       errorMessage.value = result.message || '帳號或密碼錯誤，請重新輸入'
     }
@@ -75,7 +95,7 @@ const handleLogin = async () => {
           </div>
 
           <!-- 登入表單 -->
-          <form @submit.prevent="handleLogin">
+          <form @submit.prevent="handleLogin" novalidate>
             <div class="mb-3">
               <label class="form-label fs-7 fw-semibold" for="admin-user">帳號</label>
               <input 
