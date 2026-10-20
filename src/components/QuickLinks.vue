@@ -46,7 +46,7 @@ defineProps({
         <div class="bg-info-subtle text-info-emphasis p-3 rounded-circle d-inline-flex mb-2">
           <span class="material-symbols-outlined fs-2">analytics</span>
         </div>
-        <h6 class="fw-bold mb-1"><a href="https://etuser2.hopto.org/newklms/score">成績查詢</a></h6>
+        <h6 class="fw-bold mb-1"><router-link to="/score">成績查詢</router-link></h6>
         <small class="text-muted">術科與榜單公告</small>
       </div>
     </div>

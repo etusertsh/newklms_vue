@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import NewsDetail from '../views/NewsDetail.vue'
 import LoginView from '../views/LoginView.vue'
 import AboutView from '../views/AboutView.vue'
+import ScoreView from '../views/ScoreView.vue'
 
 const routes = [
     {
@@ -25,6 +26,11 @@ const routes = [
         path: '/auth', // 👈 新增管理登入路由
         name: 'Login',
         component: LoginView
+    },
+    {
+        path: '/score',
+        name: 'Score',
+        component: ScoreView
     },
     {
         path: '/:pathMatch(.*)*',
