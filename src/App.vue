@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted, provide } from 'vue'
+import {ref, onMounted, onUnmounted, provide } from 'vue'
 import Navbar from './components/Navbar.vue'
 import FooterBar from './components/FooterBar.vue'
 
@@ -45,6 +45,7 @@ const setAuth = (userData) => {
   }
 }
 
+// 1. 檢查 Auth 狀態 API
 const checkAuth = async() => {
   try {
     const res = await fetch('/newklms/api/auth/me', {
@@ -54,14 +55,47 @@ const checkAuth = async() => {
       const data = await res.json()
       if (data.isLoggedIn) {
         setAuth(data.user)
+      } else {
+        setAuth(null)
       }
+    } else if (res.status === 401 ){
+      // 伺服器回傳未授權，自動清空狀態
+      setAuth(null)
     }
   } catch (err) {
     console.error('Check Auth Failed:', err)
   }
 }
+
+// 2. 統一的 API Fetch 工具（自動處理 401 攔截）
+const apiFetch = async (url, options = {}) => {
+  const headers = {
+    'X-Requested-With': 'XMLHttpRequest',
+    ...options.headers
+  }
+  
+  const response = await fetch(url, { ...options, headers })
+
+  // 若發送操作時發現 Session 已過期
+  if (response.status === 401) {
+    if (authState.value.isLoggedIn) {
+      setAuth(null)
+      alert('您的登入狀態已逾時，請重新登入！')
+    }
+  }
+
+  return response
+}
+
+// 3. 頁面切換/聚焦時自動檢核 (VisibilityChange)
+const handleVisibilityChange = () => {
+  if (document.visibilityState === 'visible') {
+    checkAuth() // 切換回頁面時主動檢查一次
+  }
+}
 provide('auth', authState)
 provide('setAuth', setAuth)
+provide('apiFetch', apiFetch)
 
 const loadingParams = ref(true)
 
@@ -125,6 +159,7 @@ const dateVars = ref({
   score_open: '2026-04-07 08:59:00',
   score_end: '2026-04-30 23:59:00'
 })
+let pollInterval = null
 
 // 2. 讀取日期設定 API
 const fetchDateVars = async () => {
@@ -147,11 +182,31 @@ const fetchDateVars = async () => {
 
 // 3. 廣播 dateVars 提供給 HeroBanner 與 Schedule 使用
 provide('dateVars', dateVars)
+provide('fetchDataVars', fetchDateVars)
+
+let heartBeatInterval = null
 
 onMounted(() => {
   checkAuth()
   fetchSystemParams()
   fetchDateVars()
+  pollInterval = setInterval(() => {
+    fetchDateVars()
+  }, 1 * 60 * 1000)
+
+  // 事件監聽：切換 Tab 時同步檢核
+  document.addEventListener('visibilitychange', handleVisibilityChange)
+
+  // 低頻率探針：每 10 分鐘檢查一次 Session 是否仍有效
+  heartBeatInterval = setInterval(() => {
+    checkAuth()
+  }, 30 * 60 * 1000)
+})
+
+onUnmounted(() =>{
+  if(pollInterval) clearInterval(pollInterval)
+  document.removeEventListener('visibilitychange', handleVisibilityChange)
+  if (heartBeatInterval) clearInterval(heartBeatInterval)
 })
 </script>
 

@@ -41,14 +41,17 @@ const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
               </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="nav-register" href="https://etuser2.hopto.org/newklms/register">
+              <router-link class="nav-link" id="nav-register" to="/register">
                 <span class="material-symbols-outlined">edit_square</span> 線上報名
-              </a>
+              </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="nav-signon" href="https://etuser2.hopto.org/newklms/member/auth">
+              <a v-if="auth.isLoggedIn && auth.user?.usertype=='student'" class="nav-link" id="nav-signon" :href="'/newklms/member/data' + auth.user?.memberid">
                 <span class="material-symbols-outlined">search</span> 報名查詢
               </a>
+              <router-link v-else class="nav-link" id="nav-signon" to="/member/auth">
+                <span class="material-symbols-outlined">search</span> 報名查詢
+              </router-link>
             </li>
             <li class="nav-item">
               <!-- 已登入狀態：顯示 realname，點擊前往 /newklms/admin -->

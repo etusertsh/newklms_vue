@@ -8,6 +8,8 @@ defineProps({
   siteSlogan: String
 })
 
+const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
+
 // 取得全域日期參數
 const dateVars = inject('dateVars', ref({}))
 
@@ -60,12 +62,15 @@ const formattedEndTime = computed(() => {
           {{ siteSlogan }}
         </p>
         <div class="d-flex flex-wrap gap-3">
-          <a href="https://etuser2.hopto.org/newklms/register" class="btn btn-light fw-bold px-4 py-2 text-teal shadow-sm d-flex align-items-center gap-1">
+          <router-link to="/register" class="btn btn-light fw-bold px-4 py-2 text-teal shadow-sm d-flex align-items-center gap-1">
             <span class="material-symbols-outlined">arrow_forward</span> 立即開始報名
-          </a>
-          <a href="https://etuser2.hopto.org/newklms/member/auth" class="btn btn-outline-light px-4 py-2 fw-semibold d-flex align-items-center gap-1">
+          </router-link>
+          <a v-if="auth.isLoggedIn && auth.user?.usertype=='student'" :href="'/newklms/member/data/' + auth.user?.memberid" class="btn btn-outline-light px-4 py-2 fw-semibold d-flex align-items-center gap-1">
             <span class="material-symbols-outlined">find_in_page</span> 查詢報名與報名表
           </a>
+          <router-link v-else to="/member/auth" class="btn btn-outline-light px-4 py-2 fw-semibold d-flex align-items-center gap-1">
+            <span class="material-symbols-outlined">find_in_page</span> 查詢報名與報名表
+          </router-link>
         </div>
       </div>
       <div class="col-lg-4 d-none d-lg-block text-center">

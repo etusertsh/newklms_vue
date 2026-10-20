@@ -1,10 +1,12 @@
 <script setup>
+import {inject, ref} from 'vue'
 defineProps({
   prospectusUrl: {
     type: String,
     default: '#'
   }
 })
+const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
 </script>
 <template>
   <div class="row g-3 mb-4">
@@ -13,9 +15,9 @@ defineProps({
         <div class="bg-primary-subtle text-primary p-3 rounded-circle d-inline-flex mb-2">
           <span class="material-symbols-outlined fs-2">assignment_add</span>
         </div>
-        <a href="https://etuser2.hopto.org/newklms/register">
+        <router-link to="/register">
           <h6 class="fw-bold mb-1">填寫報名表</h6>
-        </a>
+        </router-link>
         <small class="text-muted">上傳資料與報考項目</small>
       </div>
     </div>
@@ -24,9 +26,12 @@ defineProps({
         <div class="bg-success-subtle text-success p-3 rounded-circle d-inline-flex mb-2">
           <span class="material-symbols-outlined fs-2">badge</span>
         </div>
-        <a href="https://etuser2.hopto.org/newklms/member/auth">
+        <a v-if="auth.isLoggedIn && auth.user?.usertype=='student'" :href="'/newklms/member/data/' + auth.user?.memberid">
           <h6 class="fw-bold mb-1">報名表列印</h6>
         </a>
+        <router-link v-else to="/member/auth">
+          <h6 class="fw-bold mb-1">報名表列印</h6>
+        </router-link>
         <small class="text-muted">相關資料填寫完成即可下載</small>
       </div>
     </div>

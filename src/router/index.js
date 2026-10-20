@@ -4,6 +4,8 @@ import NewsDetail from '../views/NewsDetail.vue'
 import LoginView from '../views/LoginView.vue'
 import AboutView from '../views/AboutView.vue'
 import ScoreView from '../views/ScoreView.vue'
+import RegisterView from '../views/RegisterView.vue'
+import MemberloginView from '../views/MemberloginView.vue'
 
 const routes = [
     {
@@ -31,6 +33,17 @@ const routes = [
         path: '/score',
         name: 'Score',
         component: ScoreView
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: RegisterView
+    },
+    {
+        path: '/memberlogin',
+        name: 'MemberLogin',
+        alias: ['/member/auth'],
+        component: MemberloginView
     },
     {
         path: '/:pathMatch(.*)*',
