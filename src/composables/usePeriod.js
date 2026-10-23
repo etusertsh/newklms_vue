@@ -1,23 +1,48 @@
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, inject, getCurrentInstance } from 'vue'
 
-export function usePeriod(dateVars) {
+// 全域共用當前時間（模組級單例，避免多個元件重複啟動 Timer）
+const now = ref(new Date())
+let timer = null
+let subscriberCount = 0
+
+function startTicker() {
+    if (!timer) {
+        now.value = new Date()
+        timer = setInterval(() => {
+            now.value = new Date()
+        }, 1000)
+    }
+    subscriberCount++
+}
+
+function stopTicker() {
+    subscriberCount--
+    if (subscriberCount <= 0 && timer) {
+        clearInterval(timer)
+        timer = null
+        subscriberCount = 0
+    }
+}
+
+export function usePeriod(customDateVars) {
     /**
      * 檢查指定功能當前的狀態
      * @param {string} openStr 開始時間
      * @param {string} endStr 結束時間
      * @returns {'UPCOMING' | 'ACTIVE' | 'ENDED'}
      */
-    // 全域共用當前時間（避免多個元件重複開 Timer）
-    const now = ref(new Date())
-    let timer = null
+    const dateVars = customDateVars || inject('dateVars', ref({}))
+    const fetchDateVars = inject('fetchDateVars', inject('fetchDataVars', null))
 
-    // 啟動全域計時器（每秒更新一次時間）
-    function startTicker() {
-        if (!timer) {
-            timer = setInterval(() => {
-                now.value = new Date()
-            }, 1000)
-        }
+    if (getCurrentInstance()) {
+        onMounted(() => {
+            startTicker()
+        })
+        onUnmounted(() => {
+            stopTicker()
+        })
+    } else {
+        startTicker()
     }
 
     const getStatus = (openStr, endStr) => {
@@ -46,7 +71,7 @@ export function usePeriod(dateVars) {
         getStatus(dateVars.value?.score_open, dateVars.value?.score_end)
     )
 
-    // 監聽狀態切換臨界點：當狀態從 UPCOMING 變成 ACTIVE 時，可選擇性發送 API 向伺服器雙重確認
+    // 監聽狀態切換臨界點：當狀態從 UPCOMING 變成 ACTIVE 時，向伺服器雙重確認
     watch(registerStatus, (newStatus, oldStatus) => {
         if (oldStatus === 'UPCOMING' && newStatus === 'ACTIVE') {
             if (typeof fetchDateVars === 'function') {
@@ -54,9 +79,11 @@ export function usePeriod(dateVars) {
             }
         }
     })
+
     return {
         now,
         registerStatus,
-        scoreStatus
+        scoreStatus,
+        getStatus
     }
 }

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { systemApi } from '../api'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,23 +17,11 @@ const fetchNewsDetail = async () => {
   const newsId = route.params.id
 
   try {
-    const response = await fetch(`/newklms/api/viewnews/${newsId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error(`無法讀取公告內容 (HTTP ${response.status})`)
-    }
-
-    const data = await response.json()
-    news.value = data.data || data
+    const data = await systemApi.getNewsDetail(newsId)
+    news.value = data?.data || data
   } catch (err) {
     console.error('Fetch ViewNews Error:', err)
-    error.value = '無法載入該筆公告內容，請稍後再試。'
+    error.value = err.message || '無法載入該筆公告內容，請稍後再試。'
   } finally {
     loading.value = false
   }

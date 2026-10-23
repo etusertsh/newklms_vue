@@ -1,8 +1,6 @@
 <script setup>
 import { ref, inject } from 'vue'
-//import { useRouter } from 'vue-router'
-
-//const router = useRouter()
+import { authApi } from '../api'
 
 // 表單綁定變數
 const adminUser = ref('')
@@ -41,22 +39,9 @@ const handleLogin = async (e) => {
   errorMessage.value = ''
 
   try {
-    // 提示：開發階段若有跨域，可經由 Vite Proxy 轉發至 /api/auth/login
-    const response = await fetch('/newklms/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      body: JSON.stringify({
-        admin_user: username,
-        admin_pass: password
-      })
-    })
+    const result = await authApi.adminLogin(username, password)
 
-    const result = await response.json()
-
-    if (response.ok && result.success) {
+    if (result && result.success) {
       // 1. 更新前端 Auth 狀態
       if (setAuth) {
         setAuth(result.data)
@@ -64,11 +49,11 @@ const handleLogin = async (e) => {
       // 2. 登入成功：跳轉至 CI4 後端管理主頁 (/newklms/admin)
       window.location.href = '/newklms/admin'
     } else {
-      errorMessage.value = result.message || '帳號或密碼錯誤，請重新輸入'
+      errorMessage.value = result?.message || '帳號或密碼錯誤，請重新輸入'
     }
   } catch (err) {
     console.error('Login Error:', err)
-    errorMessage.value = '連線伺服器失敗，請稍後再試'
+    errorMessage.value = err.message || '連線伺服器失敗，請稍後再試'
   } finally {
     loading.value = false
   }

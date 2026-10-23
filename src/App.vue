@@ -2,6 +2,7 @@
 import {ref, onMounted, onUnmounted, provide } from 'vue'
 import Navbar from './components/Navbar.vue'
 import FooterBar from './components/FooterBar.vue'
+import { authApi, systemApi, setUnauthorizedHandler } from './api'
 
 // 1. 定義系統參數響應式物件（帶有預設值，避免載入前畫面空白）
 const sysParams = ref({
@@ -28,42 +29,50 @@ const sysParams = ref({
 
 const authState = ref({
   isLoggedIn: false,
-  user: null
+  user: null,
+  isReady: false
 })
 
 const setAuth = (userData) => {
-  if(userData) {
+  if (userData) {
     authState.value = {
       isLoggedIn: true,
-      user: userData
+      user: userData,
+      isReady: true
     }
-  }else{
+  } else {
     authState.value = {
       isLoggedIn: false,
-      user: null
+      user: null,
+      isReady: true
     }
   }
 }
 
+// 註冊全域 401 逾時攔截
+setUnauthorizedHandler(() => {
+  if (authState.value.isLoggedIn) {
+    setAuth(null)
+    alert('您的登入狀態已逾時，請重新登入！')
+  }
+})
+
 // 1. 檢查 Auth 狀態 API
-const checkAuth = async() => {
+const checkAuth = async () => {
   try {
-    const res = await fetch('/newklms/api/auth/me', {
-      headers: { 'X-Requested-With': 'XMLHttpRequest' }
-    })
-    if (res.ok) {
-      const data = await res.json()
-      if (data.isLoggedIn) {
-        setAuth(data.user)
-      } else {
-        setAuth(null)
-      }
-    } else if (res.status === 401 ){
-      // 伺服器回傳未授權，自動清空狀態
+    const data = await authApi.checkAuthMe()
+    if (data?.isLoggedIn) {
+      setAuth(data.user)
+    } else {
       setAuth(null)
     }
+    return authState.value
   } catch (err) {
-    console.error('Check Auth Failed:', err)
+    setAuth(null)
+    if (err.status !== 401) {
+      console.error('Check Auth Failed:', err)
+    }
+    return authState.value
   }
 }
 
@@ -95,6 +104,7 @@ const handleVisibilityChange = () => {
 }
 provide('auth', authState)
 provide('setAuth', setAuth)
+provide('checkAuth', checkAuth)
 provide('apiFetch', apiFetch)
 
 const loadingParams = ref(true)
@@ -114,18 +124,7 @@ const parseJsonField = (val) => {
 // 2. 向 API 讀取系統參數
 const fetchSystemParams = async () => {
   try {
-    // 提示：開發階段若有跨域，可透過 Vite Proxy 轉發至 /api/param
-    const response = await fetch('/newklms/api/param', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    })
-
-    if (!response.ok) throw new Error('無法取得系統參數 API')
-
-    const resData = await response.json()
+    const resData = await systemApi.getSystemParams()
     const data = resData.data || resData // 容錯處理 API 格式
 
     // 格式化解析字串化的 JSON 陣列與物件
@@ -164,16 +163,7 @@ let pollInterval = null
 // 2. 讀取日期設定 API
 const fetchDateVars = async () => {
   try {
-    const response = await fetch('/newklms/api/datevars', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    })
-    if (!response.ok) throw new Error('無法讀取日期設定 API')
-    
-    const resData = await response.json()
+    const resData = await systemApi.getDateVars()
     dateVars.value = resData.data || resData
   } catch (err) {
     console.error('Fetch DateVars Error:', err)
@@ -182,6 +172,7 @@ const fetchDateVars = async () => {
 
 // 3. 廣播 dateVars 提供給 HeroBanner 與 Schedule 使用
 provide('dateVars', dateVars)
+provide('fetchDateVars', fetchDateVars)
 provide('fetchDataVars', fetchDateVars)
 
 let heartBeatInterval = null

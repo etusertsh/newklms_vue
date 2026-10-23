@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, inject } from 'vue'
 import { usePeriod } from '../composables/usePeriod'
+import { scoreApi } from '../api'
 
 // 1. 注入全域系統與日期參數
 const sysParams = inject('sysParams', ref({}))
@@ -62,22 +63,9 @@ const handleQuery = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await fetch('/newklms/api/score/toquery', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      body: JSON.stringify({
-        year: actionYear.value,
-        idnumber: idnumber.value.trim(),
-        uid: uid.value.trim()
-      })
-    })
+    const result = await scoreApi.queryScore(actionYear.value, idnumber.value.trim(), uid.value.trim())
 
-    const result = await response.json()
-
-    if (response.ok && (result.success || result.id > 0 || result.data)) {
+    if (result && (result.success || result.id > 0 || result.data)) {
       scoreData.value = result.data || result
       isQueried.value = true
       
@@ -90,11 +78,11 @@ const handleQuery = async () => {
         String(now.getMinutes()).padStart(2, '0') + ':' +
         String(now.getSeconds()).padStart(2, '0')
     } else {
-      errorMessage.value = result.message || '查無資料：輸入的資料缺失或有誤，無法查詢！'
+      errorMessage.value = result?.message || '查無資料：輸入的資料缺失或有誤，無法查詢！'
     }
   } catch (err) {
     console.error('Score Query Error:', err)
-    errorMessage.value = '連線伺服器失敗，請檢查網路連線或稍後再試！'
+    errorMessage.value = err.message || '連線伺服器失敗，請檢查網路連線或稍後再試！'
   } finally {
     loading.value = false
   }
@@ -107,7 +95,7 @@ const triggerPrint = () => {
 </script>
 
 <template>
-  <main class="container my-4 flex-grow-1">
+  <section id="page-score" class="page-view active">
 
     <!-- ===================================================
          情境 1：成績查詢尚未開放 (UPCOMING)
@@ -342,7 +330,7 @@ const triggerPrint = () => {
       </div>
     </div>
 
-  </main>
+  </section>
 </template>
 
 <style scoped>

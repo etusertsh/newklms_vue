@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
+import { usePeriod } from '../composables/usePeriod'
 
 defineProps({
   actionYear: String,
@@ -10,22 +11,9 @@ defineProps({
 
 const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
 
-// 取得全域日期參數
+// 取得全域日期參數與共用計時狀態
 const dateVars = inject('dateVars', ref({}))
-
-const now = ref(new Date())
-let timer = null
-
-onMounted(() => {
-  // 每秒更新當前時間
-  timer = setInterval(() => {
-    now.value = new Date()
-  }, 1000)
-})
-
-onUnmounted(() => {
-  if (timer) clearInterval(timer)
-})
+const { now } = usePeriod(dateVars)
 
 // 動態計算倒數資訊 (根據 system_end)
 const countdownInfo = computed(() => {
@@ -56,7 +44,7 @@ const formattedEndTime = computed(() => {
   <div class="hero-banner mb-4">
     <div class="row align-items-center">
       <div class="col-lg-8">
-        <span class="badge bg-white text-dark mb-2 px-3 py-2 fw-semibold rounded-pill">115學年度體育班甄試線上報名</span>
+        <span class="badge bg-white text-dark mb-2 px-3 py-2 fw-semibold rounded-pill">{{ actionYear }}學年度{{ siteName }}</span>
         <h1 class="fw-bold display-6 mb-3">歡迎進入{{ actionYear }}學年度{{ schoolName }}{{  siteName }}</h1>
         <p class="lead opacity-90 fs-6 mb-4">
           {{ siteSlogan }}

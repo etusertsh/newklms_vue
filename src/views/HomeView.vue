@@ -21,6 +21,7 @@ const sysParams = inject('sysParams')
 
     <!-- 4 個快捷操作卡片 -->
     <QuickLinks :prospectus-url="sysParams.prospectus" />
+    {{ auth }}
 
     <!-- 最新公告與日程表 -->
     <div class="row g-4">

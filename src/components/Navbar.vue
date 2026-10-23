@@ -31,8 +31,21 @@ const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" id="nav-news" to="/#announce">
+              <router-link class="nav-link" id="nav-news" :to="{path: '/' , hash: '#announce'}">
                 <span class="material-symbols-outlined">campaign</span> 最新公告
+              </router-link>
+            </li>            
+            <li class="nav-item">
+              <router-link class="nav-link" id="nav-register" to="/register">
+                <span class="material-symbols-outlined">edit_square</span> 線上報名
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link v-if="auth.isLoggedIn && (auth.user?.usertype == 'student' || auth.user?.usertype == 'admin')" class="nav-link" id="nav-signon" :to="`/memberarea/${auth.user?.memberid}`">
+                <span class="material-symbols-outlined">search</span> 報名查詢
+              </router-link>
+              <router-link v-else class="nav-link" id="nav-signon" to="/member/auth">
+                <span class="material-symbols-outlined">search</span> 報名查詢
               </router-link>
             </li>
             <li class="nav-item">
@@ -41,24 +54,11 @@ const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" id="nav-register" to="/register">
-                <span class="material-symbols-outlined">edit_square</span> 線上報名
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <a v-if="auth.isLoggedIn && auth.user?.usertype=='student'" class="nav-link" id="nav-signon" :href="'/newklms/member/data' + auth.user?.memberid">
-                <span class="material-symbols-outlined">search</span> 報名查詢
-              </a>
-              <router-link v-else class="nav-link" id="nav-signon" to="/member/auth">
-                <span class="material-symbols-outlined">search</span> 報名查詢
-              </router-link>
-            </li>
-            <li class="nav-item">
               <!-- 已登入狀態：顯示 realname，點擊前往 /newklms/admin -->
               <a 
                 v-if="auth.isLoggedIn && auth.user?.usertype=='admin'" 
-                class="nav-link text-primary ms-lg-2 fw-bold d-flex align-items-center gap-1" 
-                id="nav-admin" 
+                class="nav-link ms-lg-2 fw-bold d-flex align-items-center gap-1" 
+                id="nav-login" 
                 href="/newklms/admin"
               >
                 <span class="material-symbols-outlined">shield_person</span>

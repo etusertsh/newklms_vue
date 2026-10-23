@@ -6,6 +6,7 @@ import AboutView from '../views/AboutView.vue'
 import ScoreView from '../views/ScoreView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import MemberloginView from '../views/MemberloginView.vue'
+import MemberareaView from '../views/MemberareaView.vue'
 
 const routes = [
     {
@@ -46,20 +47,40 @@ const routes = [
         component: MemberloginView
     },
     {
+        path: '/memberarea/:memberid',
+        alias: ['/member/data/:memberid'],
+        name: 'Memberarea',
+        component: MemberareaView
+    },
+    {
         path: '/:pathMatch(.*)*',
         redirect: '/'
     }
 ]
 
 const router = createRouter({
-    // ⚠️ 關鍵設定：會自動讀取 vite.config.js 設定的 base ('/vue/')
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
-    // 處理滾動行為：當切換路由或點擊 #announce 時平滑滾動
+    // 處理滾動行為：包含錨點平滑滾動、頁面切換置頂與上一頁位置還原
     scrollBehavior(to, from, savedPosition) {
-        if (to.hash) {
-            return { el: to.hash, behavior: 'smooth' }
+        // 1. 如果是按上一頁/下一頁，保留原瀏覽位置
+        if (savedPosition) {
+            return savedPosition
         }
+        // 2. 如果帶有 Hash 錨點 (例如 #announce)
+        if (to.hash) {
+            return new Promise((resolve) => {
+                // 延遲 300ms 等待首頁 API 資料載入與 DOM 渲染完成
+                setTimeout(() => {
+                    resolve({
+                        el: to.hash,
+                        behavior: 'smooth',
+                        top: 70 // 扣除上方 sticky navbar 的高度，避免標題被遮擋
+                    })
+                }, 300)
+            })
+        }
+        // 3. 一般頁面切換，預設滾動至最上方
         return { top: 0 }
     }
 })

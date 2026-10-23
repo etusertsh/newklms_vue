@@ -2,6 +2,8 @@
 import { ref, computed, inject } from 'vue'
 
 const dateVars = inject('dateVars', ref({}))
+const sysParams = inject('sysParams', ref({}))
+const actionYear = computed(() => sysParams.value?.actionyear || '115')
 
 // 日期解析 Helper：將 "2026-03-06 12:00:00" 轉換為 "03/06"
 const formatShortDate = (str) => {
@@ -53,7 +55,7 @@ const scheduleList = computed(() => {
 <template>
   <div class="custom-card p-4 h-100">
     <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-      <span class="material-symbols-outlined text-primary">event_note</span>115學年度甄試日程表
+      <span class="material-symbols-outlined text-primary">event_note</span>{{ actionYear }}學年度甄試日程表
     </h5>
     <ul class="list-unstyled position-relative border-start border-2 border-teal ms-2 ps-3 my-2">
       <li 

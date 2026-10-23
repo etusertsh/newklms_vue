@@ -10,6 +10,8 @@ const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
 </script>
 <template>
   <div class="row g-3 mb-4">
+    <div class="col-md-12">
+    </div>
     <div class="col-md-3 col-6">
       <div class="custom-card p-3 text-center hover-lift h-100">
         <div class="bg-primary-subtle text-primary p-3 rounded-circle d-inline-flex mb-2">

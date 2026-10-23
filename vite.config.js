@@ -23,12 +23,17 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    strictPost: true,
+    strictPort: true,
     proxy: {
       '/newklms/api': {
-        target: 'https://etuser2.hopto.org/newklms',
+        target: 'https://etuser2.hopto.org',
         changeOrigin: true,
         secure: false,
+        configure: (proxy, options) => {
+          proxy.on('proxyReq', (proxyReq, req) => {
+            console.log('[Proxy 轉發中]:', req.method, req.url, '=>', options.target + req.url)
+          })
+        }
       }
     },
   }

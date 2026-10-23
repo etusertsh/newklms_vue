@@ -1,6 +1,12 @@
 <script setup>
 import { ref, computed, inject } from 'vue'
+import { useRouter } from 'vue-router'
 import { usePeriod } from '../composables/usePeriod'
+import { authApi } from '../api'
+
+const router = useRouter()
+const setAuth = inject('setAuth', null)
+const checkAuth = inject('checkAuth', null)
 
 // 1. 注入全域系統與日期參數
 const sysParams = inject('sysParams', ref({}))
@@ -50,31 +56,27 @@ const handleMemberLogin = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await fetch('/newklms/api/member/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      body: JSON.stringify({
-        year: actionYear.value,
-        stname: name,
-        stdid: id
-      })
-    })
+    const result = await authApi.memberLogin(actionYear.value, name, id)
 
-    const result = await response.json()
-
-    if (response.ok && result.success) {
-      // 登入成功，跳轉至後端考生資料專區 (/newklms/member/data/{memberid})
-      const targetUrl = result.redirect_url || `/newklms/member/data/${result.memberid}`
-      window.location.href = targetUrl
+    if (result && result.success) {
+      if (typeof setAuth === 'function') {
+        setAuth({
+          memberid: result.memberid,
+          realname: name,
+          usertype: 'student'
+        })
+      }
+      if (typeof checkAuth === 'function') {
+        await checkAuth()
+      }
+      const targetUrl = `/memberarea/${result.memberid}`
+      router.push(targetUrl)
     } else {
-      errorMessage.value = result.message || '查無報名資料，請確認輸入無誤或先完成報名程序！'
+      errorMessage.value = result?.message || '查無報名資料，請確認輸入無誤或先完成報名程序！'
     }
   } catch (err) {
     console.error('Member Login Error:', err)
-    errorMessage.value = '連線伺服器失敗，請稍後再試！'
+    errorMessage.value = err.message || '連線伺服器失敗，請稍後再試！'
   } finally {
     loading.value = false
   }
@@ -82,8 +84,7 @@ const handleMemberLogin = async () => {
 </script>
 
 <template>
-  <main class="container my-4 flex-grow-1">
-    <section id="page-signon" class="page-view active">
+  <section id="page-signon" class="page-view active">
       <div class="row justify-content-center">
         <div class="col-lg-8">
           <div class="custom-card p-4 mt-4">
@@ -196,7 +197,6 @@ const handleMemberLogin = async () => {
         </div>
       </div>
     </section>
-  </main>
 </template>
 
 <style scoped>

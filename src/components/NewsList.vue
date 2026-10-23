@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { systemApi } from '../api'
 
 const newsList = ref([])
 const loading = ref(true)
@@ -35,25 +36,12 @@ const fetchNews = async () => {
   error.value = null
   
   try {
-    // 提示：正式開發建議搭配 Vite Proxy，將 URL 改為相對路徑 '/api/news'
-    const response = await fetch('/newklms/api/news', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error(`伺服器回應錯誤 (HTTP ${response.status})`)
-    }
-
-    const data = await response.json()
+    const data = await systemApi.getNewsList()
     // 根據 API 格式賦值（若 API 返回陣列直接賦值，若包含 data 欄位則取 data）
-    newsList.value = Array.isArray(data) ? data : (data.data || [])
+    newsList.value = Array.isArray(data) ? data : (data?.data || [])
   } catch (err) {
     console.error('Fetch News Error:', err)
-    error.value = '無法載入最新公告，請稍後再試。'
+    error.value = err.message || '無法載入最新公告，請稍後再試。'
   } finally {
     loading.value = false
   }
@@ -64,9 +52,8 @@ onMounted(() => {
 })
 </script>
 
-<template>
-  <a name="announce"></a>
-  <div class="custom-card p-4 h-100">
+<template>  
+  <div id="announce" class="custom-card p-4 h-100">
     <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
       <h5 class="fw-bold m-0 d-flex align-items-center gap-2">
         <a name="announce"></a>
