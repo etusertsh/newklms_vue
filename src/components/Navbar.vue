@@ -41,7 +41,7 @@ const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link v-if="auth.isLoggedIn && (auth.user?.usertype == 'student' || auth.user?.usertype == 'admin')" class="nav-link" id="nav-signon" :to="`/memberarea/${auth.user?.memberid}`">
+              <router-link v-if="auth.isLoggedIn && (auth.user?.usertype == 'student' || auth.user?.usertype == 'admin') && auth.user?.memberid !==''" class="nav-link" id="nav-signon" :to="`/memberarea/${auth.user?.memberid}`">
                 <span class="material-symbols-outlined">search</span> 報名查詢
               </router-link>
               <router-link v-else class="nav-link" id="nav-signon" to="/member/auth">

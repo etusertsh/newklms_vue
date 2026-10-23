@@ -17,9 +17,11 @@ const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
         <div class="bg-primary-subtle text-primary p-3 rounded-circle d-inline-flex mb-2">
           <span class="material-symbols-outlined fs-2">assignment_add</span>
         </div>
-        <router-link to="/register">
-          <h6 class="fw-bold mb-1">填寫報名表</h6>
-        </router-link>
+        <h6 class="fw-bold mb-1">
+          <router-link to="/register">
+            填寫報名表
+          </router-link>
+        </h6>
         <small class="text-muted">上傳資料與報考項目</small>
       </div>
     </div>
@@ -28,12 +30,14 @@ const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
         <div class="bg-success-subtle text-success p-3 rounded-circle d-inline-flex mb-2">
           <span class="material-symbols-outlined fs-2">badge</span>
         </div>
-        <a v-if="auth.isLoggedIn && auth.user?.usertype=='student'" :href="'/newklms/member/data/' + auth.user?.memberid">
-          <h6 class="fw-bold mb-1">報名表列印</h6>
-        </a>
-        <router-link v-else to="/member/auth">
-          <h6 class="fw-bold mb-1">報名表列印</h6>
+        <h6 class="fw-bold mb-1">
+        <router-link v-if="auth.isLoggedIn && (auth.user?.usertype == 'student' || auth.user?.usertype == 'admin') && auth.user?.memberid !==''" :to="`/memberarea/${auth.user?.memberid}`">
+          報名表列印
         </router-link>
+        <router-link v-else to="/member/auth">
+          報名表列印
+        </router-link>
+        </h6>
         <small class="text-muted">相關資料填寫完成即可下載</small>
       </div>
     </div>
@@ -42,9 +46,11 @@ const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
         <div class="bg-warning-subtle text-warning-emphasis p-3 rounded-circle d-inline-flex mb-2">
           <span class="material-symbols-outlined fs-2">download_for_offline</span>
         </div>
+        <h6 class="fw-bold mb-1">
         <a :href="prospectusUrl" download="甄試簡章.pdf" target="_blank">
-          <h6 class="fw-bold mb-1">簡章下載</h6>
+          簡章下載
         </a>
+        </h6>
         <small class="text-muted">閱讀實施計畫與規定</small>
       </div>
     </div>
