@@ -179,7 +179,7 @@ const syncAddress = () => {
                     v-model.trim="form2.email"
                     @blur="validateField('email')"
                     id="email"
-                    class="form-control"
+                    class="form-control font-monospace"
                     :class="{'is-invalid': errors.email}"
                     placeholder="例如：name@example.com"
                     autocomplete="email">
@@ -196,7 +196,7 @@ const syncAddress = () => {
                     v-model.trim="form2.stzip"
                     @blur="validateField('stzip')"
                     @change="syncZip"
-                    class="form-control"
+                    class="form-control font-monospace"
                     :class="{ 'is-invalid': errors.stzip}"
                     placeholder="郵遞區號 (例: 200)"
                     inputmode="numeric">
@@ -234,7 +234,7 @@ const syncAddress = () => {
                     type="text"
                     v-model.trim="form2.comzip"
                     @blur="validateField('comzip')"
-                    class="form-control"
+                    class="form-control font-monospace"
                     :class="[errors.comzip ? 'is-invalid' : '', syncCheck ? 'bg-light': '']"                    
                     :readonly="syncCheck"
                     placeholder="郵遞區號 (例: 200)"

@@ -1,6 +1,9 @@
 <script setup>
-// 👈 直接將專案根目錄的 README.md 當作 Vue 元件載入 (打包時自動編譯成 HTML)
+import {inject} from 'vue'
 import ReadmeContent from '../../README.md'
+
+const sysParams = inject('sysParams')
+
 </script>
 
 <template>
@@ -10,12 +13,12 @@ import ReadmeContent from '../../README.md'
         <span class="material-symbols-outlined fs-1 text-primary">info</span>
         <div>
           <h4 class="fw-bold m-0">關於本系統</h4>
-          <small class="text-muted">體育班甄試線上報名系統發展與架構說明</small>
+          <small class="text-muted">{{ sysParams.schoolname}} {{ sysParams.sitename}} 系統說明</small>
         </div>
       </div>
 
       <!-- 直接渲染靜態 Markdown 元件 -->
-      <div class="about-markdown-body fs-6 lh-base text-secondary">
+      <div class="about-markdown-body fs-6 lh-lg text-secondary">
         <ReadmeContent />
       </div>
     </div>

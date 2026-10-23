@@ -35,6 +35,24 @@ export const authApi = {
       stname,
       stdid
     })
+  },
+
+  /**
+   * 管理權限登出程序（admin 身份）
+   */
+  adminLogout() {
+    return http.post('/auth/logout', {
+      usertype: 'admin'
+    })
+  },
+
+  /**
+   * 考生權限登出程序（student 身份）
+   */
+  memberLogout() {
+    return http.post('/auth/logout', {
+      usertype: 'student'
+    })
   }
 }
 

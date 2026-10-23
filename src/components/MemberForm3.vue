@@ -381,7 +381,7 @@ onMounted(() => {
               type="number"
               step="0.1"
               v-model.number="scoreForm.grade"
-              class="form-control"
+              class="form-control font-monospace"
               placeholder="例如：85.5"
               required
             >

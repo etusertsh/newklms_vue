@@ -1,6 +1,7 @@
 <script setup>
 import { inject, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { authApi } from '../api'
 
 const props = defineProps({
   registerStep: {
@@ -18,11 +19,20 @@ const progressWidth = computed(() => {
   return `${Math.min(Math.max(((step - 1) / 3) * 100, 0), 100)}%`
 })
 
-const handleLogout = () => {
-  if (typeof setAuth === 'function') {
-    setAuth(null)
+const handleLogout = async () => {
+  try {
+    const result = await authApi.memberLogout()
+    if(result && result.isLoggedIn){
+      setAuth(result.user)
+      router.push('/')
+    }else{
+      setAuth(null)
+      router.push('/member/auth')
+    }
+  } catch (err) {
+    console.error('Logout Error: ',err)
+    errorMessage.value = err.message || '連線伺服器失敗，請稍後再試'
   }
-  router.push('/member/auth')
 }
 </script>
 
@@ -66,9 +76,15 @@ const handleLogout = () => {
         <li><strong class="text-success">步驟三</strong>、列印：列印出報名表、准考證、報名檢核表等。</li>
         <li><strong class="text-success">步驟四</strong>、現場報名：攜帶報名表、准考證及獲獎資料並攜帶相關證明文件，至本校現場報名。</li>
     </ul>
-    <p><strong class="text-danger"><span class="material-symbols-outlined fs-2">notifications</span> 提醒事項：</strong>填寫基本資料後即開始線上報名，後續需要再<span class="text-danger fw-semibold">完成其他資料的填寫</span>。<br />在報名期限內可以利用<router-link to="/member/auth"
-            class="btn btn-sm btn-outline-secondary"><span class="material-symbols-outlined">search</span> 報名查詢</router-link>功能，用自己的<strong class="text-primary">身份證字號 / 居留證號</strong>和<strong
-            class="text-primary">學生姓名</strong>登入報名系統編輯自己的資料，以及下載列印書面報名資料。</p>
+    <div class="d-flex align-items-stretch gap-1">
+        <span class="material-symbols-outlined fs-1 text-danger">notifications_active</span>
+        <div>
+            <strong class="text-danger">提醒事項：</strong>填寫基本資料後即開始線上報名，後續需要再<span class="text-danger fw-semibold">完成其他資料的填寫</span>。
+            在報名期限內可以利用<a href="{{base_url('/member/auth')}}"
+            class="btn btn-sm btn-outline-secondary"><span class="material-symbols-outlined">search</span> 報名查詢</a>功能，用自己的<strong class="text-primary">身份證字號 / 居留證號</strong>和<strong
+            class="text-primary">學生姓名</strong>登入報名系統編輯自己的資料，以及下載列印書面報名資料。
+        </div>
+    </div>
     </div>
 
 </template>

@@ -113,7 +113,7 @@ const onStdidInput = (e) => {
         <!-- 身分證字號 / 居留證號 -->
         <div class="col-md-4 col-sm-12">
           <label class="form-label fw-semibold">身分證字號 / 居留證號 <span class="text-danger">*</span></label>
-          <h5 class="text-primary">{{ form.stdid ? form.stdid.slice(0, 6) : '' }}****</h5>
+          <h5 class="text-primary font-monospace">{{ form.stdid ? form.stdid.slice(0, 6) : '' }}****</h5>
         </div>
 
         <!-- 生理性別 -->
@@ -146,7 +146,7 @@ const onStdidInput = (e) => {
                 type="number"
                 v-model.number="form.birth_yy"
                 @blur="onBlur('birth')"
-                class="form-control"
+                class="form-control font-monospace"
                 :class="{ 'is-invalid': errors.birth }"
                 min="80"
                 max="130"
@@ -161,7 +161,7 @@ const onStdidInput = (e) => {
             <select
               v-model="form.birth_mm"
               @change="onChange('birth')"
-              class="form-select"
+              class="form-select font-monospace"
               :class="{ 'is-invalid': errors.birth }"
             >
               <option value="" selected disabled>-- 月份 --</option>
@@ -173,7 +173,7 @@ const onStdidInput = (e) => {
             <select
               v-model="form.birth_dd"
               @change="onChange('birth')"
-              class="form-select"
+              class="form-select font-monospace"
               :class="{ 'is-invalid': errors.birth }"
             >
               <option value="" selected disabled>-- 日期 --</option>
@@ -211,7 +211,7 @@ const onStdidInput = (e) => {
           v-model.trim="form.hometel"
           @blur="onBlur('hometel')"
           type="tel"
-          class="form-control"
+          class="form-control font-monospace"
           :class="{ 'is-invalid': errors.hometel }"
           id="hometel"
           placeholder="例如：0912345678 或 02-23456789"
@@ -233,7 +233,7 @@ const onStdidInput = (e) => {
             v-model.number="form.hh"
             @blur="onBlur('hh')"    
             type="number"
-            class="form-control"
+            class="form-control font-monospace"
             :class="{ 'is-invalid': errors.hh }"
             id="hh"
             placeholder="例如：165"
@@ -255,7 +255,7 @@ const onStdidInput = (e) => {
             v-model.number="form.ww"
             @blur="onBlur('ww')"
             type="number"
-            class="form-control"
+            class="form-control font-monospace"
             :class="{ 'is-invalid': errors.ww }"
             id="ww"
             min="20"

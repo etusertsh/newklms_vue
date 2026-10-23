@@ -80,7 +80,7 @@ onMounted(() => {
       </div>
 
       <!-- 富文本內容渲染 (使用 v-html) -->
-      <div style="min-height: 40vh" class="news-body fs-6 lh-base text-secondary" v-html="news.body"></div>
+      <div style="min-height: 40vh" class="news-body fs-6 lh-lg text-secondary p-4" v-html="news.body"></div>
     </div>
   </section>
 </template>
