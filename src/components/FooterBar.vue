@@ -7,7 +7,7 @@ defineProps({
 })
 </script>
 <template>
-  <footer class="bg-white border-top mt-auto py-4">
+  <footer class="border-top mt-auto py-4">
     <div class="container text-center text-md-start">
       <div class="row g-3 align-items-center">
         <div class="col-md-6">

@@ -81,7 +81,7 @@ onMounted(() => {
                 <li><span class="check-box"></span> 報名費 800 元 <small class="text-muted">(持有社政單位核發低收入戶證明正本及影本者免繳，正本驗畢發還)</small>
                 </li>
             </ul>        
-            <div v-if="rewards">
+            <div v-if="rewards.length > 0">
                 <h4 class="fw-bold border-bottom pb-2 mb-3">二、競賽或測驗紀錄 (具體事蹟) 證明文件</h4>
                 <ul class="list-unstyled mb-4 lh-lg">
                     <li v-for="(item, index) in rewards" :key="index">
@@ -89,7 +89,7 @@ onMounted(() => {
                     </li>
                 </ul>
             </div>
-            <div v-if="extraScores">
+            <div v-if="extraScores.length > 0">
                 <h4 class="fw-bold border-bottom pb-2 mb-3">
                     <span v-if="rewards.length > 0">三</span>
                     <span v-else>二</span>

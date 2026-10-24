@@ -14,49 +14,76 @@ const routes = [
         path: '/',
         alias: ['/index.html'],
         name: 'Home',
-        component: HomeView
+        component: HomeView,
+        meta: {
+            title: '首頁'
+        }
     },
     {
         path: '/viewnews/:id',
         name: 'NewsDetail',
-        component: NewsDetail
+        component: NewsDetail,
+        meta: {
+            title: '最新消息'
+        }
     },
     {
         path: '/about', // 👈 新增關於頁面路由
         name: 'About',
-        component: AboutView
+        component: AboutView,
+        meta: {
+            title: '關於我們'
+        }
     },
     {
         path: '/auth', // 👈 新增管理登入路由
         name: 'Login',
-        component: LoginView
+        component: LoginView,
+        meta: {
+            title: '管理登入'
+        }
     },
     {
         path: '/score',
         name: 'Score',
-        component: ScoreView
+        component: ScoreView,
+        meta: {
+            title: '成績查詢'
+        }
     },
     {
         path: '/register',
         name: 'Register',
-        component: RegisterView
+        component: RegisterView,
+        meta: {
+            title: '線上報名'
+        }
     },
     {
         path: '/memberlogin',
         name: 'MemberLogin',
         alias: ['/member/auth'],
-        component: MemberloginView
+        component: MemberloginView,
+        meta: {
+            title: '會員登入'
+        }
     },
     {
         path: '/memberarea/:memberid',
         alias: ['/member/data/:memberid'],
         name: 'Memberarea',
-        component: MemberareaView
+        component: MemberareaView,
+        meta: {
+            title: '會員專區'
+        }
     },
     {
         path: '/member/document/:doctype/:memberid',
         name: 'RegisterDocument',
-        component: RegisterDocumentView
+        component: RegisterDocumentView,
+        meta: {
+            title: '報名文件'
+        }
     },
     {
         path: '/:pathMatch(.*)*',
@@ -89,6 +116,12 @@ const router = createRouter({
         // 3. 一般頁面切換，預設滾動至最上方
         return { top: 0 }
     }
+})
+
+router.afterEach((to) => {
+    // 1. 設定網頁標題
+    const siteTitle ='基隆市立中正國中體育班甄試報名系統'
+    document.title = to.meta.title ? `${to.meta.title} - ${siteTitle}` : siteTitle
 })
 
 export default router

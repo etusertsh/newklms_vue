@@ -1,11 +1,21 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '../stores/app'
+
 defineProps({
   schoolName: { type: String, default: '基隆市立中正國中' },
   siteName: { type: String, default: '體育班甄試線上報名' }
 })
 const { auth } = storeToRefs(useAppStore())
+
+const closeMenuOnMobile = () => {
+  if (!window.matchMedia('(max-width: 991.98px)').matches) return
+
+  const navbar = document.getElementById('navbarMain')
+  if (navbar) {
+    window.bootstrap.Collapse.getOrCreateInstance(navbar).hide()
+  }
+}
 </script>
 <template>
   <header class="sticky-top navbar-custom">
@@ -24,7 +34,7 @@ const { auth } = storeToRefs(useAppStore())
           <span class="material-symbols-outlined">menu</span>
         </button>
         <div class="collapse navbar-collapse" id="navbarMain">
-          <ul class="navbar-nav ms-auto my-2 my-lg-0 gap-lg-1">
+          <ul class="navbar-nav ms-auto my-2 my-lg-0 gap-lg-1" @click="closeMenuOnMobile">
             <li class="nav-item">
               <router-link class="nav-link" id="nav-main" to="/">
                 <span class="material-symbols-outlined">home</span> 首頁
