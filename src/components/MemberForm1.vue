@@ -3,6 +3,7 @@ import { ref, inject, watch } from 'vue'
 import StudentBasicFields from './StudentBasicFields.vue'
 import { useStudentForm } from '../composables/useStudentForm'
 import { memberApi } from '../api'
+import { showError, showSuccess } from '../utils/swal'
 
 const memberData = inject('memberData', ref({}))
 const sysParams = inject('sysParams', ref({}))
@@ -54,14 +55,14 @@ const handleMemberUpdate1 = async () => {
   try {
     const result = await memberApi.updateStep1(payload)
     if (result && result.success) {
-      alert(result.message || '更新基本資料成功')
+      showSuccess(result.message || '更新基本資料成功')
       memberData.value = result.data
     } else {
-      alert(result?.message || '更新失敗')
+      showError(result?.message || '更新失敗')
     }
   } catch (err) {
     console.error('Update Step1 Error:', err)
-    alert(err.message || '伺服器連線失敗，請稍後再試。')
+    showError(err.message || '伺服器連線失敗，請稍後再試。')
   } finally {
     loading.value = false
   }

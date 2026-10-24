@@ -5,6 +5,7 @@ import RegisterTopNav from './RegisterTopNav.vue'
 import StudentBasicFields from './StudentBasicFields.vue'
 import { useStudentForm } from '../composables/useStudentForm'
 import { memberApi } from '../api'
+import { showError, showSuccess } from '../utils/swal'
 
 const sysParams = inject('sysParams', ref({}))
 const router = useRouter()
@@ -45,11 +46,12 @@ const handleStep1 = async () => {
     const result = await memberApi.updateStep1(payload)
 
     if (!result?.success) {
-      alert(result?.message || '報名失敗，請確認資料')
+      showError(result?.message || '報名失敗，請確認資料')
       if (result?.status === 'duplicate') {
         router.push('/member/auth')
       }
     } else {
+      showSuccess('報名成功！')
       if (typeof setAuth === 'function') {
         setAuth({
           memberid: result.memberid,

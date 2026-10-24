@@ -1,6 +1,7 @@
 <script setup>
 import { ref, inject, watch, onMounted } from 'vue'
 import { memberApi } from '../api'
+import { showSuccess, showError, showConfirm } from '../utils/swal'
 
 const memberData = inject('memberData', ref({}))
 const sysParams = inject('sysParams', ref({}))
@@ -97,7 +98,7 @@ const closeRewardForm = () => {
 // 送出新增獲獎紀錄
 const handleAddReward = async () => {
   if (!rewardForm.value.rewardname.trim() || !rewardForm.value.rewardrank.trim()) {
-    alert('請填寫競賽名稱與獎項成績！')
+    showError('請填寫競賽名稱與獎項成績！')
     return
   }
 
@@ -111,13 +112,13 @@ const handleAddReward = async () => {
       rewardname: rewardForm.value.rewardname.trim(),
       rewardrank: rewardForm.value.rewardrank.trim()
     })
-    alert(`競賽成績：「${rewardForm.value.rewardname}」儲存成功！`)
+    showSuccess(`競賽成績：「${rewardForm.value.rewardname}」儲存成功！`)
     closeRewardForm()
     selectedCategory.value = ''
     await loadRewards()
   } catch (err) {
     console.error('Add Reward Error:', err)
-    alert(err.message || '新增競賽成績失敗，請稍後再試！')
+    showError(err.message || '新增競賽成績失敗，請稍後再試！')
   } finally {
     submittingReward.value = false
   }
@@ -128,7 +129,7 @@ const handleDeleteReward = async (item) => {
   const rewardId = item.rewardid || item.id
   if (!rewardId) return
 
-  const confirmed = confirm(`確定要刪除獲獎紀錄「${item.rewardname || ''}」嗎？`)
+  const confirmed = showConfirm(`確定要刪除獲獎紀錄「${item.rewardname || ''}」嗎？`)
   if (!confirmed) return
 
   try {
@@ -136,7 +137,7 @@ const handleDeleteReward = async (item) => {
     await loadRewards()
   } catch (err) {
     console.error('Delete Reward Error:', err)
-    alert(err.message || '刪除失敗，請稍後再試！')
+    showError(err.message || '刪除失敗，請稍後再試！')
   }
 }
 
@@ -159,7 +160,7 @@ const closeScoreForm = () => {
 // 送出新增其他測驗成績
 const handleAddScore = async () => {
   if (scoreForm.value.grade === '' || isNaN(scoreForm.value.grade)) {
-    alert('請填寫正確的鑑定成績！')
+    showError('請填寫正確的鑑定成績！')
     return
   }
 
@@ -172,13 +173,13 @@ const handleAddScore = async () => {
       testname: scoreForm.value.testname,
       grade: scoreForm.value.grade
     })
-    alert(`鑑定成績：「${scoreForm.value.testname}」儲存成功！`)
+    showSuccess(`鑑定成績：「${scoreForm.value.testname}」儲存成功！`)
     closeScoreForm()
     selectedTestName.value = ''
     await loadScores()
   } catch (err) {
     console.error('Add Score Error:', err)
-    alert(err.message || '新增鑑定成績失敗，請稍後再試！')
+    showError(err.message || '新增鑑定成績失敗，請稍後再試！')
   } finally {
     submittingScore.value = false
   }
@@ -189,7 +190,7 @@ const handleDeleteScore = async (item) => {
   const scoreId = item.scoreid || item.id
   if (!scoreId) return
 
-  const confirmed = confirm(`確定要刪除鑑定成績「${item.testname || ''}」嗎？`)
+  const confirmed = showConfirm(`確定要刪除鑑定成績「${item.testname || ''}」嗎？`)
   if (!confirmed) return
 
   try {
@@ -197,7 +198,7 @@ const handleDeleteScore = async (item) => {
     await loadScores()
   } catch (err) {
     console.error('Delete Score Error:', err)
-    alert(err.message || '刪除失敗，請稍後再試！')
+    showError(err.message || '刪除失敗，請稍後再試！')
   }
 }
 

@@ -1,6 +1,7 @@
 <script setup>
 import {ref, inject, nextTick } from 'vue'
 import { memberApi } from '../api'
+import { showError, showSuccess } from '../utils/swal'
 
 const memberData = inject('memberData',ref({}))
 const sysParams = inject('sysParams')
@@ -108,14 +109,14 @@ const handleMemberUpdate2 = async () =>{
     try {
         const result = await memberApi.updateStep2(form2.value.memberid, payload)
         if (result && result.success) {
-            alert(result.message)
+            showSuccess(result.message)
             memberData.value = result.data
         } else {
-            alert(result?.message || '更新失敗')
+            showError(result?.message || '更新失敗')
         }
     } catch (err) {
         console.error('Update Step2 Error:', err)
-        alert(err.message || '伺服器連線失敗，請稍後再試。')
+        showError(err.message || '伺服器連線失敗，請稍後再試。')
     } finally {
         loading.value = false
     }
