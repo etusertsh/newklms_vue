@@ -1,6 +1,7 @@
 <script setup>
 import { ref, inject } from 'vue'
 import { authApi } from '../api'
+import { showSuccess } from '../utils/swal'
 
 // 表單綁定變數
 const adminUser = ref('')
@@ -45,6 +46,7 @@ const handleLogin = async (e) => {
       // 1. 更新前端 Auth 狀態
       if (setAuth) {
         setAuth(result.data)
+        showSuccess('管理權限成功登入')
       }
       // 2. 登入成功：跳轉至 CI4 後端管理主頁 (/newklms/admin)
       window.location.href = '/newklms/admin'

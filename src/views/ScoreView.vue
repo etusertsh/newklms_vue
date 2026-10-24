@@ -2,6 +2,7 @@
 import { ref, computed, inject } from 'vue'
 import { usePeriod } from '../composables/usePeriod'
 import { scoreApi } from '../api'
+import { showSuccess, showError } from '../utils/swal'
 
 // 1. 注入全域系統與日期參數
 const sysParams = inject('sysParams', ref({}))
@@ -77,8 +78,11 @@ const handleQuery = async () => {
         String(now.getHours()).padStart(2, '0') + ':' +
         String(now.getMinutes()).padStart(2, '0') + ':' +
         String(now.getSeconds()).padStart(2, '0')
+      showSuccess('查詢成功')
     } else {
-      errorMessage.value = result?.message || '查無資料：輸入的資料缺失或有誤，無法查詢！'
+      //errorMessage.value = result?.message || '查無資料：輸入的資料缺失或有誤，無法查詢！'
+      delete errorMessage.value
+      showError(result?.message || '查無資料：輸入的資料缺失或有誤，無法查詢')
     }
   } catch (err) {
     console.error('Score Query Error:', err)
@@ -151,7 +155,7 @@ const triggerPrint = () => {
                   :type="id1Type" 
                   id="id1" 
                   v-model.trim="idnumber"
-                  class="form-control text-center fs-5 tracking-wider" 
+                  class="form-control text-center fs-5 tracking-wider font-monospace" 
                   maxlength="6" 
                   required 
                   pattern="[0-9]{6}" 
@@ -175,7 +179,7 @@ const triggerPrint = () => {
                   :type="id2Type" 
                   id="id2" 
                   v-model.trim="uid"
-                  class="form-control text-center fs-5 tracking-wider" 
+                  class="form-control text-center fs-5 tracking-wider font-monospace" 
                   maxlength="4" 
                   required 
                   pattern="[0-9]{4}" 

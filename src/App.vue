@@ -1,8 +1,9 @@
 <script setup>
-import {ref, onMounted, onUnmounted, provide } from 'vue'
+import { ref, onMounted, onUnmounted, provide } from 'vue'
 import Navbar from './components/Navbar.vue'
 import FooterBar from './components/FooterBar.vue'
 import { authApi, systemApi, setUnauthorizedHandler } from './api'
+import { showSuccess, showError, showConfirm } from './utils/swal'
 
 // 1. 定義系統參數響應式物件（帶有預設值，避免載入前畫面空白）
 const sysParams = ref({
@@ -53,7 +54,7 @@ const setAuth = (userData) => {
 setUnauthorizedHandler(() => {
   if (authState.value.isLoggedIn) {
     setAuth(null)
-    alert('您的登入狀態已逾時，請重新登入！')
+    showSuccess('您的登入狀態已逾時，請重新登入！')
   }
 })
 
@@ -89,7 +90,7 @@ const apiFetch = async (url, options = {}) => {
   if (response.status === 401) {
     if (authState.value.isLoggedIn) {
       setAuth(null)
-      alert('您的登入狀態已逾時，請重新登入！')
+      showSuccess('您的登入狀態已逾時，請重新登入！')
     }
   }
 
