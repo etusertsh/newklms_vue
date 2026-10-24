@@ -11,7 +11,7 @@ const maskedStdid = computed(() => {
   return id.length >= 6 ? `${id.slice(0, 6)}****` : id
 })
 
-const uniqueNum = computed(() => memberData.value?.unique_num || '')
+const uniqueNum = computed(() => memberData.value?.memberid || '')
 const prospectusUrl = computed(() => sysParams.value?.prospectus || '')
 </script>
 
@@ -102,14 +102,13 @@ const prospectusUrl = computed(() => sysParams.value?.prospectus || '')
                 <div class="fw-semibold">獲獎與競賽紀錄表</div>
                 <small class="text-muted">若有登記獎項請列印並檢附佐證正影本</small>
               </div>
-              <a
-                :href="`/newklms/files/rewardprint/${uniqueNum}`"
-                target="_blank"
+              <router-link
+                :to="`/member/document/rewardsocre/${uniqueNum}`"
                 class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"
                 :class="{ 'disabled': !uniqueNum }"
               >
                 <span class="material-symbols-outlined fs-6">download</span> 下載
-              </a>
+              </router-link>
             </div>
 
             <!-- 報名檢核表 -->
@@ -118,14 +117,13 @@ const prospectusUrl = computed(() => sysParams.value?.prospectus || '')
                 <div class="fw-semibold">報名所需表件檢核表</div>
                 <small class="text-muted">前往現場繳件前請逐項核對攜帶表件</small>
               </div>
-              <a
-                :href="`/newklms/files/checklist/${uniqueNum}`"
-                target="_blank"
+              <router-link
+                :to="`/member/document/checklist/${uniqueNum}`"
                 class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"
                 :class="{ 'disabled': !uniqueNum }"
               >
                 <span class="material-symbols-outlined fs-6">download</span> 下載
-              </a>
+              </router-link>
             </div>
 
             <!-- 甄試簡章 -->

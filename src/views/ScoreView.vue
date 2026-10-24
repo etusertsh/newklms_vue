@@ -214,7 +214,7 @@ const triggerPrint = () => {
     <!-- ===================================================
          情境 3：查詢成功 (顯示成績結果與列印視圖)
          =================================================== -->
-    <div v-else class="result-container mx-auto" style="max-width: 850px;">
+    <div v-else class="result-container mx-auto" style="max-width: 800px;">
       
       <!-- 頂部操作按鈕列 (列印時會被隱藏) -->
       <div class="d-flex justify-content-between align-items-center mb-4 no-print">

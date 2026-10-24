@@ -7,6 +7,7 @@ import ScoreView from '../views/ScoreView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import MemberloginView from '../views/MemberloginView.vue'
 import MemberareaView from '../views/MemberareaView.vue'
+import RegisterDocumentView from '../views/RegisterDocumentView.vue'
 
 const routes = [
     {
@@ -51,6 +52,11 @@ const routes = [
         alias: ['/member/data/:memberid'],
         name: 'Memberarea',
         component: MemberareaView
+    },
+    {
+        path: '/member/document/:doctype/:memberid',
+        name: 'RegisterDocument',
+        component: RegisterDocumentView
     },
     {
         path: '/:pathMatch(.*)*',
