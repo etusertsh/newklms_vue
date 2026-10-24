@@ -1,10 +1,12 @@
 <script setup>
 import { ref, inject, watch, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '../stores/app'
 import { memberApi } from '../api'
 import { showSuccess, showError, showConfirm } from '../utils/swal'
 
 const memberData = inject('memberData', ref({}))
-const sysParams = inject('sysParams', ref({}))
+const { sysParams } = storeToRefs(useAppStore())
 
 // 獲獎紀錄清單與載入狀態
 const rewards = ref([])

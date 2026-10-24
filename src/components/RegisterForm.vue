@@ -1,16 +1,18 @@
 <script setup>
-import { ref, inject } from 'vue'
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import RegisterTopNav from './RegisterTopNav.vue'
 import StudentBasicFields from './StudentBasicFields.vue'
 import { useStudentForm } from '../composables/useStudentForm'
 import { memberApi } from '../api'
 import { showError, showSuccess } from '../utils/swal'
+import { useAppStore } from '../stores/app'
 
-const sysParams = inject('sysParams', ref({}))
+const appStore = useAppStore()
+const { sysParams } = storeToRefs(appStore)
 const router = useRouter()
-const setAuth = inject('setAuth', null)
-const checkAuth = inject('checkAuth', null)
+const { setAuth, checkAuth } = appStore
 
 const {
   createInitialForm,

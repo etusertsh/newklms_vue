@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, inject, computed, provide} from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
+import { useAppStore } from '../stores/app'
 import { memberApi } from '../api'
 import RegisterTopNav from '../components/RegisterTopNav.vue'
 import MemberForm1 from '../components/MemberForm1.vue'
@@ -20,9 +22,9 @@ const registerStep = computed(() => {
     return Number(memberData.value?.step || 0) + 1
 })
 
-const sysParams = inject('sysParams', ref({}))
-const auth = inject('auth', ref({ isLoggedIn: false, user: null, isReady: false }))
-const checkAuth = inject('checkAuth', null)
+const appStore = useAppStore()
+const { sysParams, auth } = storeToRefs(appStore)
+const { checkAuth } = appStore
 
 const fetchMemberdata = async (thememberid) => {
     loading.value = true

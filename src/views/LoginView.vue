@@ -1,5 +1,6 @@
 <script setup>
-import { ref, inject } from 'vue'
+import { ref } from 'vue'
+import { useAppStore } from '../stores/app'
 import { authApi } from '../api'
 import { showSuccess } from '../utils/swal'
 
@@ -9,8 +10,7 @@ const adminPass = ref('')
 const loading = ref(false)
 const errorMessage = ref('')
 
-// 注入 App.vue 提供的 setAuth 方法
-const setAuth = inject('setAuth')
+const { setAuth } = useAppStore()
 
 // 處理登入表單送出
 const handleLogin = async (e) => {

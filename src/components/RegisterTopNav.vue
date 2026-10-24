@@ -1,7 +1,10 @@
 <script setup>
 import { inject, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { authApi } from '../api'
+import { showSuccess, showError } from '../utils/swal'
+import { useAppStore } from '../stores/app'
 
 const props = defineProps({
   registerStep: {
@@ -11,8 +14,9 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const sysParams = inject('sysParams', {})
-const setAuth = inject('setAuth', null)
+const appStore = useAppStore()
+const { sysParams } = storeToRefs(appStore)
+const setAuth = appStore.setAuth
 
 const progressWidth = computed(() => {
   const step = Number(props.registerStep) || 1
@@ -24,14 +28,16 @@ const handleLogout = async () => {
     const result = await authApi.memberLogout()
     if(result && result.isLoggedIn){
       setAuth(result.user)
+      showSuccess('管理權限已成功登出學生身份，將返回首頁')
       router.push('/')
     }else{
       setAuth(null)
+      showSuccess('已登出學生身份，將返回登入頁面')
       router.push('/member/auth')
     }
   } catch (err) {
     console.error('Logout Error: ',err)
-    errorMessage.value = err.message || '連線伺服器失敗，請稍後再試'
+    showError(err.message || '連線伺服器失敗，請稍後再試')
   }
 }
 </script>

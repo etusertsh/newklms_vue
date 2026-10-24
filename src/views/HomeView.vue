@@ -1,12 +1,12 @@
 <script setup>
-import { inject } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '../stores/app'
 import HeroBanner from '../components/HeroBanner.vue'
 import QuickLinks from '../components/QuickLinks.vue'
 import NewsList from '../components/NewsList.vue'
 import Schedule from '../components/Schedule.vue'
 
-// 注入在 App.vue 全域 provide 的系統參數
-const sysParams = inject('sysParams')
+const { sysParams } = storeToRefs(useAppStore())
 </script>
 
 <template>

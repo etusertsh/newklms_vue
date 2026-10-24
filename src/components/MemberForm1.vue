@@ -1,12 +1,14 @@
 <script setup>
 import { ref, inject, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '../stores/app'
 import StudentBasicFields from './StudentBasicFields.vue'
 import { useStudentForm } from '../composables/useStudentForm'
 import { memberApi } from '../api'
 import { showError, showSuccess } from '../utils/swal'
 
 const memberData = inject('memberData', ref({}))
-const sysParams = inject('sysParams', ref({}))
+const { sysParams } = storeToRefs(useAppStore())
 
 const {
   createInitialForm,

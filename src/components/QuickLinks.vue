@@ -1,12 +1,13 @@
 <script setup>
-import {inject, ref} from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '../stores/app'
 defineProps({
   prospectusUrl: {
     type: String,
     default: '#'
   }
 })
-const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
+const { auth } = storeToRefs(useAppStore())
 </script>
 <template>
   <div class="row g-3 mb-4">

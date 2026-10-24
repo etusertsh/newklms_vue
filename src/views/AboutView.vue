@@ -1,8 +1,9 @@
 <script setup>
-import {inject} from 'vue'
+import { storeToRefs } from 'pinia'
 import ReadmeContent from '../../README.md'
+import { useAppStore } from '../stores/app'
 
-const sysParams = inject('sysParams')
+const { sysParams } = storeToRefs(useAppStore())
 
 </script>
 

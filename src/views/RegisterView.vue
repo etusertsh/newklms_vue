@@ -1,12 +1,11 @@
 <script setup>
-import { inject, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { usePeriod } from '../composables/usePeriod'
 import RegisterForm from '../components/RegisterForm.vue'
+import { useAppStore } from '../stores/app'
 
-const dateVars = inject('dateVars', ref({}))
-const sysParams = inject('sysParams')
-const auth = inject('auth')
-const { registerStatus } = usePeriod(dateVars)
+const { dateVars, sysParams, auth } = storeToRefs(useAppStore())
+const { registerStatus } = usePeriod()
 
 </script>
 

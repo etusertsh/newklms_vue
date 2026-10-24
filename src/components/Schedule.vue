@@ -1,8 +1,9 @@
 <script setup>
-import { ref, computed, inject } from 'vue'
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '../stores/app'
 
-const dateVars = inject('dateVars', ref({}))
-const sysParams = inject('sysParams', ref({}))
+const { dateVars, sysParams } = storeToRefs(useAppStore())
 const actionYear = computed(() => sysParams.value?.actionyear || '115')
 
 // 日期解析 Helper：將 "2026-03-06 12:00:00" 轉換為 "03/06"

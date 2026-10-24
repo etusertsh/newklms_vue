@@ -1,11 +1,11 @@
 <script setup>
-import { inject, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '../stores/app'
 defineProps({
   schoolName: { type: String, default: '基隆市立中正國中' },
   siteName: { type: String, default: '體育班甄試線上報名' }
 })
-// 注入全域 Auth 狀態
-const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
+const { auth } = storeToRefs(useAppStore())
 </script>
 <template>
   <header class="sticky-top navbar-custom">

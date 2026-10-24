@@ -1,13 +1,13 @@
 <script setup>
-import { ref, computed, inject } from 'vue'
+import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { usePeriod } from '../composables/usePeriod'
 import { scoreApi } from '../api'
-import { showSuccess, showError } from '../utils/swal'
+import { showInfo, showError } from '../utils/swal'
+import { useAppStore } from '../stores/app'
 
-// 1. 注入全域系統與日期參數
-const sysParams = inject('sysParams', ref({}))
-const dateVars = inject('dateVars', ref({}))
-const { scoreStatus } = usePeriod(dateVars)
+const { sysParams, dateVars } = storeToRefs(useAppStore())
+const { scoreStatus } = usePeriod()
 const siteName = sysParams.value?.sitename || '體育班甄試線上報名'
 
 // 2. 表單狀態與驗證變數
@@ -78,7 +78,7 @@ const handleQuery = async () => {
         String(now.getHours()).padStart(2, '0') + ':' +
         String(now.getMinutes()).padStart(2, '0') + ':' +
         String(now.getSeconds()).padStart(2, '0')
-      showSuccess('查詢成功')
+      showInfo('查詢成功','本成績單僅供參考，正式錄取名單以本校官網公告之正式榜單為準。')
     } else {
       //errorMessage.value = result?.message || '查無資料：輸入的資料缺失或有誤，無法查詢！'
       delete errorMessage.value
@@ -406,7 +406,7 @@ const triggerPrint = () => {
 
   @page {
     size: A4 portrait;
-    margin: 10mm;
+    margin: 15mm;
   }
 }
 </style>

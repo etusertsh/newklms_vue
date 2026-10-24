@@ -1,6 +1,8 @@
 <script setup>
-import { computed, inject, ref } from 'vue'
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { usePeriod } from '../composables/usePeriod'
+import { useAppStore } from '../stores/app'
 
 defineProps({
   actionYear: String,
@@ -9,11 +11,10 @@ defineProps({
   siteSlogan: String
 })
 
-const auth = inject('auth', ref({ isLoggedIn: false, user: null }))
+const { auth, dateVars } = storeToRefs(useAppStore())
 
 // 取得全域日期參數與共用計時狀態
-const dateVars = inject('dateVars', ref({}))
-const { now } = usePeriod(dateVars)
+const { now } = usePeriod()
 
 // 動態計算倒數資訊 (根據 system_end)
 const countdownInfo = computed(() => {

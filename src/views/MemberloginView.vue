@@ -1,19 +1,19 @@
 <script setup>
-import { ref, computed, inject } from 'vue'
+import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { usePeriod } from '../composables/usePeriod'
 import { authApi } from '../api'
+import { useAppStore } from '../stores/app'
 
 const router = useRouter()
-const setAuth = inject('setAuth', null)
-const checkAuth = inject('checkAuth', null)
+const appStore = useAppStore()
+const { setAuth, checkAuth } = appStore
 
-// 1. 注入全域系統與日期參數
-const sysParams = inject('sysParams', ref({}))
-const dateVars = inject('dateVars', ref({}))
+const { sysParams, dateVars } = storeToRefs(appStore)
 
 // 2. 引入 usePeriod 判斷報名開放狀態 (system_open ~ system_end)
-const { registerStatus } = usePeriod(dateVars)
+const { registerStatus } = usePeriod()
 
 const actionYear = computed(() => sysParams.value?.actionyear || '115')
 

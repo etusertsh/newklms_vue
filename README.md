@@ -26,11 +26,13 @@
 
 ## 技術與需求
 
-- Vue 3（Composition API）與 Vue Router
+- Vue 3（Composition API）、Vue Router 與 Pinia
 - Vite
 - Bootstrap 5、SweetAlert2
 - Node.js `^22.18.0` 或 `>=24.12.0`
 - 可連線的甄試系統後端 API
+
+跨頁共用的登入狀態、系統參數與日期設定由 Pinia 的 `useAppStore` 管理；元件可透過 `useAppStore()` 讀取狀態與呼叫更新資料的 actions，響應式狀態解構時使用 Pinia 的 `storeToRefs()`。
 
 ## 開發
 

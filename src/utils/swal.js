@@ -35,3 +35,14 @@ export const showConfirm = async (title, text = '此動作無法復原！') => {
     })
     return result.isConfirmed
 }
+
+// 4. 訊息對話框 (替代 alert())
+export const showInfo = async (title, text = '') => {
+    await Swal.fire({
+        title,
+        text,
+        icon: 'info',
+        confirmButtonColor: '#0d31fd',
+        timer: 3000        
+    })
+}

@@ -1,4 +1,6 @@
-import { ref, computed, onMounted, onUnmounted, watch, inject, getCurrentInstance } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, getCurrentInstance } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '../stores/app'
 
 // 全域共用當前時間（模組級單例，避免多個元件重複啟動 Timer）
 const now = ref(new Date())
@@ -24,15 +26,15 @@ function stopTicker() {
     }
 }
 
-export function usePeriod(customDateVars) {
+export function usePeriod() {
     /**
      * 檢查指定功能當前的狀態
      * @param {string} openStr 開始時間
      * @param {string} endStr 結束時間
      * @returns {'UPCOMING' | 'ACTIVE' | 'ENDED'}
      */
-    const dateVars = customDateVars || inject('dateVars', ref({}))
-    const fetchDateVars = inject('fetchDateVars', inject('fetchDataVars', null))
+    const appStore = useAppStore()
+    const { dateVars } = storeToRefs(appStore)
 
     if (getCurrentInstance()) {
         onMounted(() => {
@@ -74,9 +76,7 @@ export function usePeriod(customDateVars) {
     // 監聽狀態切換臨界點：當狀態從 UPCOMING 變成 ACTIVE 時，向伺服器雙重確認
     watch(registerStatus, (newStatus, oldStatus) => {
         if (oldStatus === 'UPCOMING' && newStatus === 'ACTIVE') {
-            if (typeof fetchDateVars === 'function') {
-                fetchDateVars() // 校正伺服器最新資料
-            }
+            appStore.fetchDateVars() // 校正伺服器最新資料
         }
     })
 

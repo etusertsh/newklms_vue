@@ -1,10 +1,12 @@
 <script setup>
 import {ref, inject, nextTick } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '../stores/app'
 import { memberApi } from '../api'
 import { showError, showSuccess } from '../utils/swal'
 
 const memberData = inject('memberData',ref({}))
-const sysParams = inject('sysParams')
+const { sysParams } = storeToRefs(useAppStore())
 
 const createInitialForm2 = () => ({
   id: memberData.value?.id || '',

@@ -1,8 +1,10 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '../stores/app'
 
 const memberData = inject('memberData', ref({}))
-const sysParams = inject('sysParams', ref({}))
+const { sysParams } = storeToRefs(useAppStore())
 
 const maskedStdid = computed(() => {
   const id = memberData.value?.stdid || ''
@@ -42,7 +44,6 @@ const prospectusUrl = computed(() => sysParams.value?.prospectus || '')
         <div class="fs-7 mt-1">請點選下方按鈕下載列印報名表單，並於規定期限內送交本校辦理現場查驗。</div>
       </div>
     </div>
-
     <div v-if="memberData?.step < 3 || memberData?.change_flag == '1'" class="alert alert-warning d-flex align-items-center mb-4" role="alert">
       <span class="material-symbols-outlined fs-3 me-2 text-warning">warning</span>
       <div class="fs-7">
