@@ -47,7 +47,7 @@ onMounted(() => {
         <!-- 說明與現場報名時間地點 -->
         <div class="alert alert-info border-info-subtle mb-2" role="alert">
             <p class="mb-2 fw-semibold">
-                📌 本檢核表可供甄試報名學生在現場報名前，檢查報名所需證明、證件是否準備妥當，以避免補件來往奔波。
+                📌 本檢核表可供甄試學生在現場報名前檢查所需證明、證件是否準備妥當，以免補件來往奔波。
             </p>
             <hr class="my-2">
             <div class="lh-base">

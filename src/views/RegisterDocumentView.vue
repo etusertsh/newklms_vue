@@ -102,7 +102,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <section class="container py-4">
+    <section class="printable-container py-4">
         <div v-if="loading" class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>

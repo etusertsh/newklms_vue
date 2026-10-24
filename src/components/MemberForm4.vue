@@ -11,7 +11,7 @@ const maskedStdid = computed(() => {
   return id.length >= 6 ? `${id.slice(0, 6)}****` : id
 })
 
-const uniqueNum = computed(() => memberData.value?.memberid || '')
+const uniqueNum = computed(() => memberData.value?.step >= 2 ? memberData.value?.memberid || '' : '')
 const prospectusUrl = computed(() => sysParams.value?.prospectus || '')
 </script>
 
@@ -74,7 +74,7 @@ const prospectusUrl = computed(() => sysParams.value?.prospectus || '')
             <div>
               <a
                 :href="`/newklms/files/registerform/${uniqueNum}`"
-                target="_blank"
+                download
                 class="btn btn-danger btn-lg w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
                 :class="{ 'disabled': !uniqueNum }"
               >
