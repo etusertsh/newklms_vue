@@ -23,10 +23,10 @@ onMounted(() => {
   appStore.checkAuth()
   appStore.fetchSystemParams()
   appStore.fetchDateVars()
-  // 高頻率探針：每 3 分鐘檢查一次 Datevars 
+  // 高頻率探針：每 1 分鐘檢查一次 Datevars 
   pollInterval = setInterval(() => {
     appStore.fetchDateVars()
-  }, 3 * 60 * 1000)
+  }, 1 * 60 * 1000)
 
   // 事件監聽：切換 Tab 時同步檢核
   document.addEventListener('visibilitychange', handleVisibilityChange)

@@ -66,3 +66,4 @@ npm run preview
 - Vite 開發伺服器將 `/newklms/api` 代理至 `vite.config.js` 設定的後端主機；連接其他環境時，請更新該代理目標。
 - 前端建置的 base path 設為 `/vue/`。部署時請將靜態檔案放在此路徑，並設定網站伺服器將前端頁面路徑回退至 `index.html`，讓 Vue Router 的 history 路由可直接載入。
 - 報名、登入、考生資料、公告、系統參數與成績等資料均由後端提供；後端需提供對應 API 與報名文件下載路徑。
+- 正式環境 CSP 請由網站伺服器設定 HTTP response header；建議政策與上線檢查請參閱 [CSP 部署指引](./docs/csp.md)。
