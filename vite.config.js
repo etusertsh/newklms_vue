@@ -5,25 +5,23 @@ import vue from '@vitejs/plugin-vue'
 import Markdown from 'unplugin-vue-markdown/vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-const normalizeBasePath = (value, fallback = '/') => {
-  if (!value) return fallback
-  const normalized = String(value).trim()
-  if (!normalized) return fallback
-  return normalized.endsWith('/') ? normalized : `${normalized}/`
+const normalizeBasePath = (value, fallback = '/vue/') => {
+  const raw = String(value ?? fallback).trim()
+  if (!raw) return fallback
+  if (raw === '/') return '/'
+  return raw.startsWith('/') ? raw.replace(/\/+$/, '/') : `/${raw.replace(/\/+$/, '/')}`
 }
 
-const normalizeAppPath = (value, fallback = '/newklms/api') => {
-  if (!value) return fallback
-  const normalized = String(value).trim()
-  if (!normalized) return fallback
-  return normalized.endsWith('/') ? normalized.slice(0, -1) : normalized
+const normalizeApiBase = (value, fallback = 'https://etuser2.hopto.org/newklms/api') => {
+  const raw = String(value ?? fallback).trim()
+  if (!raw) return fallback
+  return raw.replace(/\/+$/, '')
 }
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const appBase = normalizeBasePath(env.VITE_BASE_PATH || '/vue/', '/vue/')
-  const apiBase = normalizeAppPath(env.VITE_API_BASE || 'https://etuser2.hopto.org/newklms/api', 'https://etuser2.hopto.org/newklms/api')
-  const adminPath = normalizeAppPath(env.VITE_ADMIN_PATH || '/newklms/admin', '/newklms/admin')
+  const apiBase = normalizeApiBase(env.VITE_API_BASE || 'https://etuser2.hopto.org/newklms/api', 'https://etuser2.hopto.org/newklms/api')
 
   return {
     plugins: [
@@ -59,7 +57,6 @@ export default defineConfig(({ mode }) => {
     define: {
       __APP_BASE__: JSON.stringify(appBase),
       __APP_API_BASE__: JSON.stringify(apiBase),
-      __APP_ADMIN_PATH__: JSON.stringify(adminPath),
     },
   }
 })

@@ -1,93 +1,38 @@
-<script setup>
-import { storeToRefs } from 'pinia'
-import { useAppStore } from '../stores/app'
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
 
-defineProps({
-  schoolName: { type: String, default: '基隆市立中正國中' },
-  siteName: { type: String, default: '體育班甄試線上報名' }
-})
-const { auth } = storeToRefs(useAppStore())
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="提供公平、公開、便利的數位化報名流程：請備齊個人資格資料與學籍資料後進行線上申辦。">
+  <meta name="keywords" content="基隆市立中正國中, 體育班甄試, 民俗體育, 報名流程, 報名資格, 報名文件, 報名費用, 報名時間, 報名地點, 報名方式, 報名注意事項, 甄選, 體育班, 報名表">
+  <meta name="author" content="Etuser">
+  <title>基隆市立中正國中115學年度體育班甄試線上報名</title>
 
-const closeMenuOnMobile = () => {
-  if (!window.matchMedia('(max-width: 991.98px)').matches) return
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Symbols Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <!-- 專案自訂 CSS -->
+  <link href="https://etuser2.hopto.org/newklms/assets/css/style.css" rel="stylesheet">
+</head>
 
-  const navbar = document.getElementById('navbarMain')
-  if (navbar) {
-    window.bootstrap.Collapse.getOrCreateInstance(navbar).hide()
-  }
-}
-</script>
-<template>
-  <header class="sticky-top navbar-custom">
-    <nav class="navbar navbar-expand-lg">
-      <div class="container">
-        <router-link class="navbar-brand d-flex align-items-center gap-2" to="/">
-          <div class="bg-teal p-2 rounded-3 text-white d-flex align-items-center justify-content-center" style="background-color: var(--brand-primary);">
-            <span class="material-symbols-outlined fs-4">sports_score</span>
-          </div>
-          <div>
-            <div class="fw-bold lh-1 text-dark" style="font-size: 1.15rem;">{{ schoolName }}</div>
-            <small class="text-muted fs-7">{{ siteName }}</small>
-          </div>
-        </router-link>
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
-          <span class="material-symbols-outlined">menu</span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarMain">
-          <ul class="navbar-nav ms-auto my-2 my-lg-0 gap-lg-1" @click="closeMenuOnMobile">
-            <li class="nav-item">
-              <router-link class="nav-link" id="nav-main" to="/">
-                <span class="material-symbols-outlined">home</span> 首頁
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" id="nav-news" :to="{path: '/' , hash: '#announce'}">
-                <span class="material-symbols-outlined">campaign</span> 最新公告
-              </router-link>
-            </li>            
-            <li class="nav-item">
-              <router-link class="nav-link" id="nav-register" to="/register">
-                <span class="material-symbols-outlined">edit_square</span> 線上報名
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link v-if="auth.isLoggedIn && (auth.user?.usertype == 'student' || auth.user?.usertype == 'admin') && auth.user?.memberid !==''" class="nav-link" id="nav-signon" :to="`/memberarea/${auth.user?.memberid}`">
-                <span class="material-symbols-outlined">search</span> 報名查詢
-              </router-link>
-              <router-link v-else class="nav-link" id="nav-signon" to="/member/auth">
-                <span class="material-symbols-outlined">search</span> 報名查詢
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" id="nav-about" to="/about">
-                <span class="material-symbols-outlined">info</span> 關於
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <!-- 已登入狀態：顯示 realname，點擊前往 /newklms/admin -->
-              <a 
-                v-if="auth.isLoggedIn && auth.user?.usertype=='admin'" 
-                class="nav-link ms-lg-2 fw-bold d-flex align-items-center gap-1" 
-                id="nav-login" 
-                href="/newklms/admin"
-              >
-                <span class="material-symbols-outlined">shield_person</span>
-                {{ auth.user?.realname || auth.user?.username || '管理員' }}
-              </a>
-              <!-- 未登入狀態：顯示「管理登入」，點擊進入 SPA 的 /auth 登入頁 -->
-              <router-link 
-                v-else 
-                class="nav-link text-primary ms-lg-2 d-flex align-items-center gap-1" 
-                id="nav-login" 
-                to="/auth"
-              >
-                <span class="material-symbols-outlined">admin_panel_settings</span>
-                管理登入
-              </router-link>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </header>
-</template>
+<body>
+  <!-- Vue 挂載節點 -->
+  <div id="app"></div>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Vue 主入口模組 -->
+  <script type="module" src="./src/main.js"></script>
+</body>
+
+</html>
