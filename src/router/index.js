@@ -28,7 +28,7 @@ const routes = [
         }
     },
     {
-        path: '/about', // 👈 新增關於頁面路由
+        path: '/about', 
         name: 'About',
         component: AboutView,
         meta: {
@@ -36,7 +36,7 @@ const routes = [
         }
     },
     {
-        path: '/auth', // 👈 新增管理登入路由
+        path: '/auth', 
         name: 'Login',
         component: LoginView,
         meta: {
