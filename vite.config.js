@@ -9,12 +9,12 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   plugins: [
     vue({
-      include: [/\.vue$/, /\.md$/], // 👈 允許 vue 外掛處理 .md 檔
+      include: [/\.vue$/, /\.md$/], // 支援 Markdown
     }),
     Markdown(),
     vueDevTools(),
   ],
-  base: '/vue/',
+  base: process.env.NODE_ENV === 'production' ? '/newklms_vue/' : '/vue/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
