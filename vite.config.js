@@ -5,6 +5,10 @@ import vue from '@vitejs/plugin-vue'
 import Markdown from 'unplugin-vue-markdown/vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
+const DEFAULT_BASE = '/vue/'
+const APP_BASE = process.env.VITE_BASE_PATH || process.env.BASE_PATH || DEFAULT_BASE
+const API_BASE = (process.env.VITE_API_BASE || '/newklms/api').replace(/\/$/, '')
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -14,7 +18,7 @@ export default defineConfig({
     Markdown(),
     vueDevTools(),
   ],
-  base: '/vue/',
+  base: APP_BASE,
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -36,5 +40,8 @@ export default defineConfig({
         }
       }
     },
-  }
+  },
+  define: {
+    __APP_API_BASE__: JSON.stringify(API_BASE),
+  },
 })
