@@ -13,7 +13,7 @@ export function setUnauthorizedHandler(callback) {
   onUnauthorizedCallback = callback
 }
 
-const BASE_PREFIX = '/newklms/api'
+const BASE_PREFIX = 'https://etuser2.hopto.org/newklms/api'
 
 /**
  * 核心請求函式
