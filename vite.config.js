@@ -14,7 +14,7 @@ export default defineConfig({
     Markdown(),
     vueDevTools(),
   ],
-  base: process.env.NODE_ENV === 'production' ? '/newklms_vue/' : '/vue/',
+  base: '/vue/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
