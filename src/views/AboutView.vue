@@ -1,6 +1,6 @@
 <script setup>
 import { storeToRefs } from 'pinia'
-import ReadmeContent from '../../README.md'
+import ReadmeContent from '../ABOUT.md'
 import { useAppStore } from '../stores/app'
 
 const { sysParams } = storeToRefs(useAppStore())
@@ -13,7 +13,7 @@ const { sysParams } = storeToRefs(useAppStore())
       <div class="d-flex align-items-center gap-2 mb-4 border-bottom pb-3">
         <span class="material-symbols-outlined fs-1 text-primary">info</span>
         <div>
-          <h4 class="fw-bold m-0">關於本系統</h4>
+          <h4 class="fw-bold m-0">關於我們</h4>
           <small class="text-muted">{{ sysParams.schoolname}} {{ sysParams.sitename}} 系統說明</small>
         </div>
       </div>
